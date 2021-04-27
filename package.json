@@ -1,0 +1,20 @@
+{
+  "name": "discord-light-bot",
+  "version": "1.0.0",
+  "description": "Turns on my bedroom lights through discord.",
+  "main": "src/lightbot.js",
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "tplink-smarthome-api": "^3.3.0",
+    "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/lightbot.js"
+  },
+  "author": "Reese J Gunardi",
+  "license": "ISC"
+}
