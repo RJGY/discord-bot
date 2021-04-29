@@ -1,5 +1,5 @@
 {
-  "name": "discord-light-bot",
+  "name": "discord-bot",
   "version": "1.0.0",
   "description": "Turns on my bedroom lights through discord.",
   "main": "src/lightbot.js",
@@ -13,7 +13,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/lightbot.js"
+    "start": "node src/bot.js"
   },
   "author": "Reese J Gunardi",
   "license": "ISC"
