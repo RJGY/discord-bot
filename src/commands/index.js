@@ -4,8 +4,10 @@ const whois = require('./whois');
 const checklight = require('./checklight');
 const off = require('./off');
 const on = require('./on');
+const brightness = require('./brightness');
 
 module.exports = {
+    brightness,
     ping,
     who,
     whois,
