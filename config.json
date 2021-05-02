@@ -1,5 +1,18 @@
-{
-  "prefix": "!",
-  "name": "Inori",
-  "lightAddress" : "192.168.20.10"
+{ 
+  "bots": [
+    {
+      "prefix": "!",
+      "name": "Inori",
+      "token" : "TOKEN_INORI",
+      "tag" : "[INORI]",
+      "commands" : "base_commands"
+    },
+    {
+      "prefix": "$",
+      "name": "HXTE",
+      "token" : "TOKEN_HXTE",
+      "tag" : "[HXTE]",
+      "commands" : "money_commands"
+    }
+  ]
 }

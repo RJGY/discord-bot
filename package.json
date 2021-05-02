@@ -13,7 +13,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/bot.js"
+    "start": "node index.js"
   },
   "author": "Reese J Gunardi",
   "license": "ISC"

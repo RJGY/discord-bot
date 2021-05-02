@@ -13,7 +13,7 @@ if (message.content === `${prefix}checklight`) {
 */
 const { Client } = require('tplink-smarthome-api');
 const smartHomeClient = new Client();
-const { lightAddress } = require('../../config.json')
+const lightAddress = "192.168.20.10";
 
 module.exports = {
     name: 'checklight',

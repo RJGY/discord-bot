@@ -1,13 +1,10 @@
-require('dotenv').config();
-const discord = require('discord.js');
-const config = require('../config.json');
-const botCommands = require('./commands');
+const discord = require('discord.js')
 
-const TOKEN = process.env.TOKEN;
-const { prefix, name } = config
 
+const has = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+
+// Config Colours
 const configSchema = {
-    name,
     defaultColors: {
         success: '#41b95f',
         neutral: '#287db4',
@@ -16,61 +13,98 @@ const configSchema = {
     },
 }
 
-const bot = {
-    client: new discord.Client(),
-    log: console.log, 
-    commands: new discord.Collection(),
-    config: configSchema, 
-}
+const createBot = initialConfig => {
+    // Define Bot object
+    const bot = {
+        client: new discord.Client(),
+        log: console.log, 
+        commands: new discord.Collection(),
+    }
 
-// Load the bot.
-bot.load = function load() {
-    this.log('Loading commands...')
-    Object.keys(botCommands).forEach(key => {
-        this.commands.set(botCommands[key].name, botCommands[key])
+
+    bot.loadConfig = function loadConfig(config, tag, callback) {
+        this.log(`${tag} Loading config...`)
+        try {
+            if (!config || !has(config, 'token')) {
+                throw Error(`${tag} Config or token are missing.`)
+            }
+            this.config = {
+                ...configSchema,
+                ...config,
+                tag,
+            }
+            callback()
+        } catch (err) {
+            this.log(`Error loading config: ${err.message}`)
+            this.log('Please fix the config error and retry.')
+        }
+    }
+
+    // Load the bot
+    bot.load = function load(config) {
+        // Set up some properties
+        this.config = {}
+        const tag = config.tag || `[Bot ${config.index}]`
+
+        // Load config, load modules, and login
+        const botCommands = require(`./${config.commands}`)
+        this.loadConfig(config, tag, () => {
+            this.log(`${tag} Loading commands...`)
+            Object.keys(botCommands).forEach(key => {
+                this.commands.set(botCommands[key].name, botCommands[key])
+            })
+            this.log(`${tag} Connecting...`)
+            this.client.login(this.config.token)
+        })
+    }
+
+    // Fired on successful login
+    bot.onConnect = async function onConnect() {
+        this.log(
+            `${this.config.tag} Logged in as: ${this.client.user.tag} (id: ${this.client.user.id})`,
+        )
+    }
+
+    // Check and react to messages
+    bot.onMessage = async function onMessage(message) {
+        // ignore all other messages without our prefix
+        if (!message.content.startsWith(this.config.prefix)) return
+
+        const args = message.content.split(/ +/)
+        // get the first word (lowercase) and remove the prefix
+        const command = args.shift().toLowerCase().slice(this.config.prefix.length)
+
+        if (!this.commands.has(command)) return
+
+        try {
+            this.commands.get(command).execute(message, args, bot)
+        } catch (error) {
+            this.log(error)
+            message.reply('there was an error trying to execute that command!')
+        }
+    }
+
+    /*
+     * Register event listeners
+     */
+
+    bot.client.on('ready', bot.onConnect.bind(bot))
+    bot.client.on('error', err => {
+        bot.log(`Client error: ${err.message}`)
     })
-    this.log('Connecting...')
-    this.client.login(TOKEN)
-}
+    bot.client.on('reconnecting', () => {
+        bot.log('Reconnecting...')
+    })
+    bot.client.on('disconnect', evt => {
+        bot.log(`Disconnected: ${evt.reason} (${evt.code})`)
+    })
+    bot.client.on('message', bot.onMessage.bind(bot))
 
-// Fired on successful login.
-bot.onConnect = async function onConnect() {
-    this.log(`Logged in as: ${this.client.user.tag} (id: ${this.client.user.id})`)
-}
-
-bot.onMessage = async function onMessage(message) {
-    // ignore all other messages without our prefix
-    if (!message.content.startsWith(prefix)) return
-
-    const args = message.content.split(/ +/)
-    // get the first word (lowercase) and remove the prefix
-    const command = args.shift().toLowerCase().slice(1)
-
-    if (!this.commands.has(command)) return
-
-    try {
-        this.commands.get(command).execute(message, args)
-    } catch (error) {
-        this.log(error)
-        message.reply('there was an error trying to execute that command!')
+    return {
+        start: () => bot.load(initialConfig),
     }
 }
 
-// Login to Discord with token
-bot.client.on('ready', () => {
-    bot.onConnect.bind(bot);
-    bot.log(`Ready!`);
-});
-bot.client.on('error', err => {
-    bot.log(`Client error: ${err.message}`);
-});
-bot.client.on('reconnecting', () => {
-    bot.log('Reconnecting...');
-});
-bot.client.on('disconnect', evt => {
-    bot.log(`Disconnected: ${evt.reason} (${evt.code})`);
-});
-bot.client.on('message', bot.onMessage.bind(bot));
-
-// start the bot
-bot.load();
+module.exports = {
+    createBot,
+}
