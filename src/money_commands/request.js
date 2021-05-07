@@ -1,5 +1,3 @@
-
-
 function httpGet(url) {
   return new Promise((resolve, reject) => {
     const http = require('http'),
@@ -44,8 +42,8 @@ module.exports = {
         (async(url) => {
             var buf = await httpGet(url);
             console.log(buf.toString('utf-8'));
-          })('https://httpbin.org/headers');
-        message.channel.send(`My name is ${bot.config.name} and I was created to search prices!`);
+          })(args);
+        message.channel.send(`Retrieving data...`);
 
     },
 }
