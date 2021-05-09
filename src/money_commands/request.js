@@ -1,32 +1,4 @@
-function httpGet(url) {
-  return new Promise((resolve, reject) => {
-    const http = require('http'),
-      https = require('https');
-
-    let client = http;
-
-    if (url.toString().indexOf("https") === 0) {
-      client = https;
-    }
-
-    client.get(url, (resp) => {
-      let chunks = [];
-
-      // A chunk of data has been recieved.
-      resp.on('data', (chunk) => {
-        chunks.push(chunk);
-      });
-
-      // The whole response has been received. Print out the result.
-      resp.on('end', () => {
-        resolve(Buffer.concat(chunks));
-      });
-
-    }).on("error", (err) => {
-      reject(err);
-    });
-  });
-}
+var getTitleAtUrl = require('get-title-at-url');
 /*
 (async(url) => {
   var buf = await httpGet(url);
@@ -39,11 +11,10 @@ module.exports = {
     name: 'request',
     description: 'test request help?!',
     execute(message, args, bot) {
-        (async(url) => {
-            var buf = await httpGet(url);
-            console.log(buf.toString('utf-8'));
-          })(args);
-        message.channel.send(`Retrieving data...`);
-
+      message.channel.send(`Retrieving data...`);
+      message.channel.send(`args: ${args}`);
+      getTitleAtUrl(args.toString(), function(title){
+        console.log(title);
+      });
     },
 }
