@@ -9,29 +9,40 @@ const createCoin = initalConfig => {
         coinType : None,
         contract : None,
         quantity : None,
-        driver : None,
         symbol : None,
         price : None,
         balance : None,
-    }
-    
-    coin.setTrackerUrl = function setTrackerUrl() {
-        if (this.coinType == "eth") {
-            this.trackerUrl = this.eth_url + this.contract
-        }
-        else if (this.coinType == "bsc") {
-            this.trackerUrl = this.bsc_url + this.contract
-        } else {
-            Error("setTrackerUrl error: Invalid coin type.")
-        }
     }
 
     coin.setParams = function setParams() {
         this.coinType = initalConfig.coinType
         this.contract = initalConfig.contract
+        this.quantity = initalConfig.quantity
+        this.symbol = initalConfig.symbol
+
+        if (this.coinType == "eth") {
+            this.trackerUrl = eth_url + this.contract
+        }
+        else if (this.coinType == "bsc") {
+            this.trackerUrl = bsc_url + this.contract
+        } else {
+            Error("setTrackerUrl error: Invalid coin type.")
+        }
+    }
+
+    coin.setPrice = function setPrice(price) {
+        if (typeof(price) != number) {
+            Error("setPrice error: Invalid price argument.")
+        }
+        this.price = price
+        this.balance = this.price * this.quantity
     }
 
     return {
         start: () => coin.setParams(),
     }
+}
+
+module.exports = {
+    createCoin
 }
