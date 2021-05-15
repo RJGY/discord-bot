@@ -14,7 +14,7 @@ module.exports = {
       message.channel.send(`Retrieving data...`);
       message.channel.send(`args: ${args}`);
       getTitleAtUrl(args.toString(), function(title){
-        console.log(title);
+        message.channel.send(`title: ${title}`);
       });
     },
 }
