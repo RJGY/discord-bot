@@ -1,5 +1,5 @@
 const who = require('./who');
-const request = require('./request');
+const request = require('./coin_helpers/request');
 const coins = require('./coinManager');
 
 module.exports = {
