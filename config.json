@@ -5,14 +5,21 @@
       "name": "Inori",
       "token" : "TOKEN_INORI",
       "tag" : "[INORI]",
-      "commands" : "base_commands"
+      "commands" : "inori_commands"
     },
     {
       "prefix": "$",
       "name": "HXTE",
       "token" : "TOKEN_HXTE",
       "tag" : "[HXTE]",
-      "commands" : "money_commands"
+      "commands" : "hate_commands"
+    },
+    {
+      "prefix": "%",
+      "name": "Dank Meme Abuser",
+      "token" : "TOKEN_MEMER",
+      "tag" : "[HXTE]",
+      "commands" : "memer_commands"
     }
   ]
 }

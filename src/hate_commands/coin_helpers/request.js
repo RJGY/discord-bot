@@ -1,11 +1,4 @@
 var getTitleAtUrl = require('get-title-at-url');
-/*
-(async(url) => {
-  var buf = await httpGet(url);
-  console.log(buf.toString('utf-8'));
-})('https://httpbin.org/headers');
-*/
-
 
 module.exports = {
     name: 'request',
