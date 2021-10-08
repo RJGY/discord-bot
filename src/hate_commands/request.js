@@ -13,12 +13,7 @@ module.exports = {
     execute(message, args, bot) {
       message.channel.send(`Retrieving data...`);
       message.channel.send(`args: ${args}`);
-      const options = {
-        hostname: args.toString(),
-        port: 443,
-        path: '/todos',
-        method: 'GET'
-      }
+      const options = new URL(args.toString());
       const req = https.request(options, res => {
         message.channel.send(`statusCode: ${res.statusCode}`)
       
@@ -32,10 +27,5 @@ module.exports = {
       })
       
       req.end()
-      /*
-      getTitleAtUrl(args.toString(), function(title){
-        message.channel.send(`title: ${title}`);
-      });
-      */
     },
 }
